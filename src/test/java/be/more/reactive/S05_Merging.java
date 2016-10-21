@@ -21,8 +21,8 @@ public class S05_Merging extends BaseTest {
 
 	@Test
 	public void mergeAsync() throws Exception {
-		final Observable<Long> smallNumbers = getSmallNumbersEmittedAsync();
-		final Observable<Long> biggerNumbers = getBiggerNumbersEmittedAsync();
+		final Observable<Long> smallNumbers = getSmallNumbersEmittedAsync();  //1,2,3,4
+		final Observable<Long> biggerNumbers = getBiggerNumbersEmittedAsync();  //100,200,300,400
 
 		Observable.merge(smallNumbers, biggerNumbers)
 				.toBlocking()    //blocks until all numbers are emitted

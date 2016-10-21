@@ -20,8 +20,8 @@ public class S06_Subscriber extends BaseTest {
     public void subscriber() {
         Observable.just(1, 2, 3, 4, 5)
                 .subscribe(
-                        i -> log.debug(i.toString()),
-                        t -> log.error("Ups", t),
+                        (Integer i) -> log.debug(i.toString()),
+                        (Throwable t) -> log.error("Ups", t),
                         () -> log.debug("Stream has completed")
                 );
     }

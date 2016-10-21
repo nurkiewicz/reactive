@@ -14,7 +14,7 @@ public class S04_Blocking extends BaseTest {
 
 	@Test
 	public void nonBlocking() throws Exception {
-		final Observable<Long> smallNumbers = getSmallNumbersEmittedAsync();
+		final Observable<Long> smallNumbers = getSmallNumbersEmittedAsync();  //1,2,3,4
 
 		smallNumbers
 				.forEach(s -> log.debug(s.toString()));
@@ -27,8 +27,10 @@ public class S04_Blocking extends BaseTest {
 		final Observable<Long> smallNumbers = getSmallNumbersEmittedAsync();
 
 		smallNumbers
-				.toBlocking()    //blocks until all numbers are emitted
-				.forEach(s -> log.debug(s.toString()));
+				.toBlocking()
+				.forEach(s -> log.debug(s.toString()));  //blocks until all numbers are emitted
+
+		log.debug("Finished");
 	}
 
 }

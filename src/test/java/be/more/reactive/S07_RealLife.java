@@ -19,7 +19,28 @@ public class S07_RealLife extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(S07_RealLife.class);
 
     @Test
-    public void findByQuery() {
+    public void findByQueryTraditional() {
+        final List<Query> queries = getQueries();  //there're 6 db queries
+
+        final List<String> results = new ArrayList<>();
+
+        queries.stream()
+                .forEach(query -> {
+                    log.debug("Firing query {}", query.getId());
+                    final String result = db.apply(query);
+
+                    log.debug("Got result {}", result);
+                    results.add(result);
+                });
+
+        log.debug("Got all results, sorting them");
+        results.sort(naturalOrder());
+
+        log.debug("Results are {}", results);
+    }
+
+    @Test
+    public void findByQueryAsync() {
         final List<Query> queries = getQueries();
 
         final List<Observable<String>> resultObservables =
@@ -43,7 +64,10 @@ public class S07_RealLife extends BaseTest {
                         t -> {
                             throw new RuntimeException(t);
                         },
-                        () -> results.sort(naturalOrder())
+                        () -> {
+                            log.debug("Got all results, sorting them");
+                            results.sort(naturalOrder());
+                        }
                         );
 
         log.debug("Results are {}", results);

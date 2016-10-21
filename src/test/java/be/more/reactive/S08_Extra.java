@@ -17,7 +17,7 @@ public class S08_Extra extends BaseTest {
         Observable.interval(1, TimeUnit.SECONDS)
                 .subscribe(s -> log.debug("Doing some cool processing {}", s.toString()));
 
-        TimeUnit.SECONDS.sleep(10);
+        TimeUnit.SECONDS.sleep(5);
     }
 
     @Test
@@ -28,7 +28,5 @@ public class S08_Extra extends BaseTest {
                 toBlocking().
                 forEach(h -> log.debug("Heart beat: {}", h));
     }
-
-
 
 }
