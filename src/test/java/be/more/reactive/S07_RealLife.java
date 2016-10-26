@@ -10,9 +10,9 @@ import rx.util.async.Async;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.naturalOrder;
+import static java.util.stream.Collectors.toList;
 
 public class S07_RealLife extends BaseTest {
 
@@ -24,8 +24,7 @@ public class S07_RealLife extends BaseTest {
 
         final List<String> results = new ArrayList<>();
 
-        queries.stream()
-                .forEach(query -> {
+        queries.forEach(query -> {
                     log.debug("Firing query {}", query.getId());
                     final String result = db.apply(query);
 
@@ -43,34 +42,20 @@ public class S07_RealLife extends BaseTest {
     public void findByQueryAsync() {
         final List<Query> queries = getQueries();
 
-        final List<Observable<String>> resultObservables =
-                queries.stream()
-                        .map(query ->
+        Observable
+                .from(queries)
+                .flatMap(query ->
                                 Async.start(() -> {
                                     log.debug("Firing query {}", query.getId());
                                     return db.apply(query);
                                 }, scheduler)
                         )
-                        .collect(Collectors.toList());
-
-        final List<String> results = new ArrayList<>();
-        Observable.merge(resultObservables)
+                .doOnNext(result -> log.debug("Got result {}", result))
+                .toList()
+                .map(list -> list.stream().sorted().collect(toList()))
                 .toBlocking()
-                .subscribe(
-                        result -> {
-                            log.debug("Got result {}", result);
-                            results.add(result);
-                        },
-                        t -> {
-                            throw new RuntimeException(t);
-                        },
-                        () -> {
-                            log.debug("Got all results, sorting them");
-                            results.sort(naturalOrder());
-                        }
-                        );
+                .subscribe(results -> log.debug("Results are {}", results));
 
-        log.debug("Results are {}", results);
     }
 
 }
