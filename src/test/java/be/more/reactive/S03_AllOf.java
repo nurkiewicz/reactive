@@ -35,7 +35,7 @@ public class S03_AllOf extends BaseTest {
             } catch (Exception e) {
                 log.error("", e);
             }
-        });
+        }).get();
 
     }
 
